@@ -272,7 +272,7 @@ async def create_vector_store_async(chunks: List[Document], embedding_model: str
             url=QDRANT_URL,
             api_key=QDRANT_API_KEY,
             collection_name=QDRANT_COLLECTION,
-            force_recreate=False  # Non ricrea se esiste già
+            force_recreate=True  # Non ricrea se esiste già
         )
         
         elapsed_time = time.time() - start_time

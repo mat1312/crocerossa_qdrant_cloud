@@ -1653,6 +1653,32 @@
       } else {
         console.error("Elemento qa-form non trovato");
       }
+
+      // Aggiungi event listener per il tasto Invio sul campo input
+      const userInputField = document.getElementById('userInput');
+      if (userInputField) {
+        userInputField.addEventListener('keydown', function(e) {
+          // Se viene premuto il tasto Invio (senza Shift)
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Previeni l'inserimento di una nuova riga
+            
+            const userInput = this.value.trim();
+            if (!userInput) return;
+            
+            // Aggiungi il messaggio dell'utente alla chat
+            addUserMessage(userInput);
+            
+            // Invia la domanda al backend
+            sendQuestion(userInput);
+            
+            // Pulisci l'input
+            this.value = '';
+          }
+        });
+        console.log("Event listener per tasto Invio inizializzato");
+      } else {
+        console.error("Elemento userInput non trovato");
+      }
     
       // Gestione del pulsante per resettare la conversazione
       const btnResetChat = document.getElementById('btnResetChat');
