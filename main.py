@@ -502,7 +502,7 @@ async def elevenlabs_webhook(request: ElevenLabsWebhookRequest):
         # Ottiene il vectorstore
         vector_store = get_vectorstore()
         
-        # Crea retriever con k=5 per ottenere i top chunk
+        # Crea retriever con k per ottenere i top chunk
         retriever = vector_store.as_retriever(
             search_type="similarity",
             search_kwargs={"k": 12}  # Prende i top chunk
