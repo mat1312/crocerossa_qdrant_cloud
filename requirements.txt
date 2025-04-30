@@ -8,3 +8,4 @@ langchain-community
 logging
 qdrant-client
 langchain_qdrant
+langchain-cohere
