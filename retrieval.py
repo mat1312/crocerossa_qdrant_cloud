@@ -19,8 +19,8 @@ from langchain_cohere import CohereRerank  # document compressor
 # Parametri
 # ---------------------------------------------------------------------------
 COHERE_API_KEY: str | None = os.getenv("COHERE_API_KEY")
-RERANK_K: int = int(os.getenv("RERANK_K", "10"))  # chunk finali
-FETCH_K: int = int(os.getenv("FETCH_K", "70"))   # chunk iniziali
+RERANK_K: int = int(os.getenv("RERANK_K", "20"))  # chunk finali
+FETCH_K: int = int(os.getenv("FETCH_K", "100"))   # chunk iniziali
 
 
 def _check_config() -> None:

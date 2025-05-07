@@ -2,6 +2,8 @@
 Script di ingestion per caricare documenti nel Qdrant Cloud vector database.
 Questo script processa i file dalla cartella 'parsed' e li indicizza nel vector database Qdrant Cloud
 con elaborazione asincrona per aumentare significativamente la velocità di processamento.
+Ad ogni esecuzione, lo script elimina la collezione esistente (se presente) e la ricrea da zero
+con tutti i documenti presenti nella cartella specificata.
 """
 
 import os
@@ -253,6 +255,18 @@ async def create_vector_store_async(chunks: List[Document], embedding_model: str
     # Inizializza il client Qdrant
     client = QdrantClient(url=QDRANT_URL, api_key=QDRANT_API_KEY)
     
+    # Elimina la collezione esistente se presente
+    try:
+        collections = await asyncio.to_thread(client.get_collections)
+        collection_names = [collection.name for collection in collections.collections]
+        
+        if QDRANT_COLLECTION in collection_names:
+            logger.info(f"Eliminazione della collezione esistente: {QDRANT_COLLECTION}")
+            await asyncio.to_thread(client.delete_collection, collection_name=QDRANT_COLLECTION)
+            logger.info(f"Collezione {QDRANT_COLLECTION} eliminata con successo")
+    except Exception as e:
+        logger.error(f"Errore durante l'eliminazione della collezione esistente: {str(e)}")
+    
     # Processo di upload in batch con gestione asincrona
     start_time = time.time()
     
@@ -262,7 +276,7 @@ async def create_vector_store_async(chunks: List[Document], embedding_model: str
     
     logger.info(f"Caricamento di {total_chunks} chunks in Qdrant Cloud ({len(batches)} batch)")
     
-    # Crea il vector store o aggiunge documenti a quello esistente
+    # Crea il vector store con una nuova collezione
     try:
         # Utilizziamo la versione asincrona dell'operazione
         vector_store = await asyncio.to_thread(
@@ -272,11 +286,11 @@ async def create_vector_store_async(chunks: List[Document], embedding_model: str
             url=QDRANT_URL,
             api_key=QDRANT_API_KEY,
             collection_name=QDRANT_COLLECTION,
-            force_recreate=True  # Non ricrea se esiste già
+            force_recreate=True  # Ora garantiamo che la collezione sia ricreata
         )
         
         elapsed_time = time.time() - start_time
-        logger.info(f"Vector store aggiornato in {elapsed_time:.2f} secondi ({total_chunks} chunks)")
+        logger.info(f"Vector store creato in {elapsed_time:.2f} secondi ({total_chunks} chunks)")
         return vector_store
     
     except Exception as e:
@@ -287,7 +301,7 @@ async def create_vector_store_async(chunks: List[Document], embedding_model: str
 async def main_async():
     """Funzione principale asincrona."""
     # Configurazione parser per argomenti da riga di comando
-    parser = argparse.ArgumentParser(description='Indicizza documenti in Qdrant Cloud.')
+    parser = argparse.ArgumentParser(description='Indicizza documenti in Qdrant Cloud eliminando e ricreando la collezione.')
     parser.add_argument('--input-dir', type=str, default=PARSED_DIR,
                         help=f'Directory contenente i documenti da indicizzare (default: {PARSED_DIR})')
     parser.add_argument('--chunk-size', type=int, default=DEFAULT_CHUNK_SIZE,
@@ -309,6 +323,7 @@ async def main_async():
     logger.info(f"Concorrenza massima: {args.concurrency}")
     logger.info(f"Modello embedding: {args.embedding_model}")
     logger.info(f"Forzare riprocessazione: {args.force}")
+    logger.info(f"La collezione Qdrant esistente '{QDRANT_COLLECTION}' sarà eliminata e ricreata")
     
     # Verifica configurazione Qdrant
     if not QDRANT_URL or not QDRANT_API_KEY or not QDRANT_COLLECTION:

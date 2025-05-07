@@ -629,7 +629,332 @@
       "hash": "0c46ff78b47d3a3cdafb7295edf34794",
       "last_processed": "2025-04-26T10:34:07.782363",
       "size_bytes": 61812
+    },
+    "c:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Competenze Territoriali Comitati CRI Lazio.pdf.md": {
+      "hash": "e3512c93559764c98d73da5706b377ee",
+      "last_processed": "2025-05-02T09:39:11.127563",
+      "size_bytes": 10089
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\37.24-modifica-Regolamento-trasparenza-e-controlli.md": {
+      "hash": "145472320bef9c6f80a4428ad7d73ced",
+      "last_processed": "2025-05-02T09:40:46.561010",
+      "size_bytes": 39257
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\94.24-Modifiche-al-regolamento-per-laccettazione-delle-donazioni-dellAssociazione-CRI-ODV.md": {
+      "hash": "cd09e560152a149f4cf790bf8c4bddb5",
+      "last_processed": "2025-05-02T09:40:47.050484",
+      "size_bytes": 19383
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\7.24-approvazione-modifiche-LG-settore-motorizzazione-2.md": {
+      "hash": "44ad027e2e99d40e5f2a24f747683d5c",
+      "last_processed": "2025-05-02T09:40:47.171167",
+      "size_bytes": 88203
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-10_fac-simile-verbale-assemblea-giovani.md": {
+      "hash": "9f94056c05cb75d5f06a9a23eeadcc98",
+      "last_processed": "2025-05-02T09:40:47.177638",
+      "size_bytes": 5027
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\37.25 indizione elezioni CRI 2025 OCR.pdf.md": {
+      "hash": "993f74a62911b4f3eadc9dbc5121fbbc",
+      "last_processed": "2025-05-02T09:40:47.219535",
+      "size_bytes": 3938
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-2_fac-simile-convocazione-consiglio-direttivo.md": {
+      "hash": "44590c85586d7bda3359b115d1333b3a",
+      "last_processed": "2025-05-02T09:40:47.229536",
+      "size_bytes": 1660
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\76.24-modifica-Regolamento-servizi-e-forniture-sotto-soglia.md": {
+      "hash": "d26fd651d402efb4628a1e45b5812af6",
+      "last_processed": "2025-05-02T09:40:47.231520",
+      "size_bytes": 85505
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\107.24-Modifica-regolamento-assemblee-e-consigli-direttivi.md": {
+      "hash": "a94fe9c2b623a267b8d6a6df6dfe61e5",
+      "last_processed": "2025-05-02T09:40:47.231520",
+      "size_bytes": 111891
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\105.21-modifica-regolamento-assemblee-e-consigli-direttivi-260621.md": {
+      "hash": "5ce53df39743027e13dcfd4cd8db765c",
+      "last_processed": "2025-05-02T09:40:47.241405",
+      "size_bytes": 109814
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\6.24-approvazione-modifiche-del-regolamento-elettorale.md": {
+      "hash": "76854e207336e3a77ff4937b9d0e9841",
+      "last_processed": "2025-05-02T09:40:47.241405",
+      "size_bytes": 110312
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-2_fac-simile-convocazione-consiglio-direttivo_terr-1.md": {
+      "hash": "3f39d700c19c95e9885f96a3a8ef5050",
+      "last_processed": "2025-05-02T09:40:47.353903",
+      "size_bytes": 1417
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-3-_fac-simile-verbale-assemblea (1).md": {
+      "hash": "60b7e581a8e6fe2812f1d8f0c095634c",
+      "last_processed": "2025-05-02T09:40:47.363406",
+      "size_bytes": 4557
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-3-_fac-simile-verbale-assemblea.md": {
+      "hash": "60b7e581a8e6fe2812f1d8f0c095634c",
+      "last_processed": "2025-05-02T09:40:47.363406",
+      "size_bytes": 4557
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-4-_fac-simile-verbale-assemblea-soci-1.md": {
+      "hash": "8e3392ec93a35d0a96003e092bf4b5bb",
+      "last_processed": "2025-05-02T09:40:47.401244",
+      "size_bytes": 4387
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-5_fac-simile-delibera-assemblea-rev-in-corso.md": {
+      "hash": "e2b336c2a8ea0ab65dd75bc87df62d3d",
+      "last_processed": "2025-05-02T09:40:47.506054",
+      "size_bytes": 1805
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-5_fac-simile-verbale-consiglio-direttivo-1.md": {
+      "hash": "1705ce8b56ed877e24507d3f273bc425",
+      "last_processed": "2025-05-02T09:40:47.510890",
+      "size_bytes": 4578
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-6_fac-simile-provvedimento-presidenziale-1.md": {
+      "hash": "db679ec7b4568bdebd6cbe11e6c1319e",
+      "last_processed": "2025-05-02T09:40:47.519976",
+      "size_bytes": 1674
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-6_fac-simile-verbale-consiglio-direttivo.md": {
+      "hash": "cb49616ec8092099fb2fa69427fc00ae",
+      "last_processed": "2025-05-02T09:40:47.596403",
+      "size_bytes": 5164
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-7_fac-simile-convocazione-assemblea-giovani-1.md": {
+      "hash": "55eeb69e333a52a320a145ae980eec6f",
+      "last_processed": "2025-05-02T09:40:47.648375",
+      "size_bytes": 1450
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-7_fac-simile-delibera-consiglio-direttivo-regionale-rev-in-corso.md": {
+      "hash": "2a487bea013fcc4dcbefefc3fa2539ca",
+      "last_processed": "2025-05-02T09:40:47.715241",
+      "size_bytes": 1855
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-3_fac-simile-foglio-presenze-assemblea-soci-1.md": {
+      "hash": "68ac97fb784f3b0a9b58de17530b2d61",
+      "last_processed": "2025-05-02T09:40:47.722256",
+      "size_bytes": 2137
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-4_fac-simile-foglio-presenze-assemblea-soci.md": {
+      "hash": "1f63a53be8a77fd0ad63df4a30d716c6",
+      "last_processed": "2025-05-02T09:40:47.744046",
+      "size_bytes": 2456
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-8_fac-simile-provvedimento-presidenziale.md": {
+      "hash": "b7fceef808128affad360984b59619e3",
+      "last_processed": "2025-05-02T09:40:48.027537",
+      "size_bytes": 1905
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-9_fac-simile-convocazione-assemblea-dei-Giovani-rev-in-corso.md": {
+      "hash": "36bf825ef3ab1f8ae42053a9fdb37526",
+      "last_processed": "2025-05-02T09:40:48.177814",
+      "size_bytes": 1453
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\all.2-Linee-guida-operative-accesso-Fondo.md": {
+      "hash": "2d31d40d45b0e542a71d90d120d52001",
+      "last_processed": "2025-05-02T09:40:48.318513",
+      "size_bytes": 19701
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All-1_fac-simile-convocazione-assemblea-soci.md": {
+      "hash": "4345eba259a99ba7c668377d0862349f",
+      "last_processed": "2025-05-02T09:40:48.334422",
+      "size_bytes": 1736
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Atto_Costitutivo_Associazione_CRI.md": {
+      "hash": "d608abb5f86659f991793b5b3fef90e7",
+      "last_processed": "2025-05-02T09:40:48.395505",
+      "size_bytes": 14243
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Calendario elettorale TERRITORIALI 2025.md": {
+      "hash": "ad98244bb54e223368d0fbfbecac1bc8",
+      "last_processed": "2025-05-02T09:40:48.458121",
+      "size_bytes": 3083
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\codice-dellorganizzazione_rev-8-giugno.md": {
+      "hash": "0ccc8c194b74413b517798458e1f5b10",
+      "last_processed": "2025-05-02T09:40:48.461121",
+      "size_bytes": 67947
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\CODICE_DI_CONDOTTA_PER_LA_PREVENZIONE_ED_IL_CONTRASTO_ALLE_MOLESTIE_SESSUALI_def..md": {
+      "hash": "644e2909ac75ed5f8dd1eeedb3df7a28",
+      "last_processed": "2025-05-02T09:40:48.776258",
+      "size_bytes": 23730
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Codice-etico.md": {
+      "hash": "1c9288bcffb94d5cfc38801e0a62c75f",
+      "last_processed": "2025-05-02T09:40:48.822720",
+      "size_bytes": 46180
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\delibera_n._10_del_12_gennaio_2019Regolamento_per_le_attivit___telecomunicazioni.md": {
+      "hash": "fef845b8fed5bfab661c183c8d07fc8e",
+      "last_processed": "2025-05-02T09:40:48.910619",
+      "size_bytes": 40612
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Competenze Territoriali Comitati CRI Lazio.pdf.md": {
+      "hash": "e3512c93559764c98d73da5706b377ee",
+      "last_processed": "2025-05-02T09:40:48.977886",
+      "size_bytes": 10089
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\All.-1_Regolamento-sulla-tutela-della-salute-e-dellasicurezza-dei-Volontari_Seconda-revisione.md": {
+      "hash": "8b9e8f4c7a0fb4f2f29eaf6a1d190008",
+      "last_processed": "2025-05-02T09:40:49.181307",
+      "size_bytes": 100812
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Disciplinare_ALBO_FORNITORI_REV_03.md": {
+      "hash": "05d35c60c27b4528a682a19256909926",
+      "last_processed": "2025-05-02T09:40:49.212794",
+      "size_bytes": 16633
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\linee-guida-donazioni.md": {
+      "hash": "cf577919f6f1e114361ab7d604526be3",
+      "last_processed": "2025-05-02T09:40:49.231078",
+      "size_bytes": 10773
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Linee-guida-sovvenzioni-contributi-e-altri-vantaggi-economici.md": {
+      "hash": "71e7d1dd8e41e4870961c8b823ceb3e8",
+      "last_processed": "2025-05-02T09:40:49.261511",
+      "size_bytes": 16000
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Linee-Guida-III-1.md": {
+      "hash": "7a6288f03dbd74ca48de7f3e4fa5c330",
+      "last_processed": "2025-05-02T09:40:49.358451",
+      "size_bytes": 31305
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Linee-Guida-standardizzazione-atti-comitati-CRI-1.md": {
+      "hash": "9e5c8d6a99636de867f4682f7542c704",
+      "last_processed": "2025-05-02T09:40:49.998813",
+      "size_bytes": 20287
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Linee-guida-standardizzazione-regionali.md": {
+      "hash": "45a4bd68bca90bee0ec6e0cbc89e2c63",
+      "last_processed": "2025-05-02T09:40:50.166039",
+      "size_bytes": 22233
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Linee_guida_NOIE.md": {
+      "hash": "250e8c56159712f00a3bd39391037988",
+      "last_processed": "2025-05-02T09:40:50.208331",
+      "size_bytes": 8461
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\LINEE-GUIDA-I-PUBBLICAZIONE.md": {
+      "hash": "a1c5c10b6fdc452b4be2980b90221e94",
+      "last_processed": "2025-05-02T09:40:50.210907",
+      "size_bytes": 134686
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento-dei-corsi-erogati-allesterno-dalla-Croce-Rossa-Italiana-marzo-23-modifiche-DM.md": {
+      "hash": "e953f4f947b435ea3b1e8a085cdf6a76",
+      "last_processed": "2025-05-02T09:40:50.352817",
+      "size_bytes": 18165
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento-per-il-Conferimento-dei-riconoscimenti-della-Croce-Rossa-italiana.md": {
+      "hash": "fa647e1c32fcf00a24efd36695815e1e",
+      "last_processed": "2025-05-02T09:40:50.444157",
+      "size_bytes": 62059
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento-SMTS_DEF.md": {
+      "hash": "dff20dadd1e63ceda91ec1fd214b95b7",
+      "last_processed": "2025-05-02T09:40:50.505285",
+      "size_bytes": 29330
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento-sullistituzione-di-nuovi-Comitati-CRI-e-sulle-competenze-territoriali.-pdf.md": {
+      "hash": "0e95f057e6576a1605fccd1007970ce7",
+      "last_processed": "2025-05-02T09:40:50.559570",
+      "size_bytes": 22756
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento-Soccorsi-Speciali-2021_REV.md": {
+      "hash": "19df0a3622fd8a38b2729067a5ca6e59",
+      "last_processed": "2025-05-02T09:40:50.635223",
+      "size_bytes": 58800
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Manuale_RFL_PDF.md": {
+      "hash": "6a880264ad7ca39a49af9ad36caad7e9",
+      "last_processed": "2025-05-02T09:40:50.666857",
+      "size_bytes": 243046
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento-sullordinamento-finanziario-e-contabile_DEF.md": {
+      "hash": "92f5fd025924e4c9a9a82227ff25623d",
+      "last_processed": "2025-05-02T09:40:50.800249",
+      "size_bytes": 14051
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento-UUCC_DEF.md": {
+      "hash": "1a171d7d7efccc0cf50b2eef790d33a5",
+      "last_processed": "2025-05-02T09:40:51.077695",
+      "size_bytes": 35310
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento-videosorveglianza.md": {
+      "hash": "bba7c27990e7214e097d11025633117e",
+      "last_processed": "2025-05-02T09:40:51.327524",
+      "size_bytes": 24785
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento_Contabilità.md": {
+      "hash": "328efa8d71dc3a36b0f845f70bb3b0b3",
+      "last_processed": "2025-05-02T09:40:51.527452",
+      "size_bytes": 24833
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\REGOLAMENTO_DELLE_ATTIVIT___DI_SOCCORSO_PISTE_DA_SCI_E_TERRENO_INNEVATO__1.md": {
+      "hash": "a6c72b13c50a9f04961a9de5d75e713f",
+      "last_processed": "2025-05-02T09:40:52.020492",
+      "size_bytes": 31905
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento_sulla_partecipazione_dei_Comitati_C.R.I._a_consorzi__imprese_sociali_ed_associazioni_t.md": {
+      "hash": "3bf789a97cb8748412e812ab4c65d94e",
+      "last_processed": "2025-05-02T09:40:52.207317",
+      "size_bytes": 13361
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Responsabilità_del_Consigliere.md": {
+      "hash": "0603bfbc959f27a1d4f47af72eee6b30",
+      "last_processed": "2025-05-02T09:40:52.345440",
+      "size_bytes": 27318
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\REG_ORG_VOLONTARI_ottobre_2019_DEF.md": {
+      "hash": "3f155c9ead27fbf46966183e08b0e067",
+      "last_processed": "2025-05-02T09:40:52.375887",
+      "size_bytes": 70177
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\STATUTO-CRI (1).md": {
+      "hash": "35cd429e03484af2576e9261bfa4d400",
+      "last_processed": "2025-05-02T09:40:52.475370",
+      "size_bytes": 110981
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Regolamento_sull___uso_dell___emblema__dei_patrocini_e_Manuale_di_comunicazione_istituzionale.md": {
+      "hash": "9c7644ddebf46fed73d42321fc616693",
+      "last_processed": "2025-05-02T09:40:52.595836",
+      "size_bytes": 191836
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Statuto-dellAssociazione-della-Croce-Rossa-Italiana-ODV.md": {
+      "hash": "24f30390e800c4a5e4ee6abd5fc05e55",
+      "last_processed": "2025-05-02T09:40:52.721971",
+      "size_bytes": 123657
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\strategia_cri_2030_stamp.md": {
+      "hash": "515f86b590669ab7e9a65d57fa77a82b",
+      "last_processed": "2025-05-02T09:40:52.750898",
+      "size_bytes": 51350
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Trasparenza completo multiriga 18_10_21_associativa.md": {
+      "hash": "47b2b9ba4c0910d747402575bb569731",
+      "last_processed": "2025-05-02T09:40:52.750898",
+      "size_bytes": 5603
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\VOLONTARIATO_Regolamento-organizzazione-e-progettualità-attività-SCU_03.01.2023-1.md": {
+      "hash": "0c46ff78b47d3a3cdafb7295edf34794",
+      "last_processed": "2025-05-02T09:40:52.750898",
+      "size_bytes": 61812
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Trasparenza_normativa_riferimento.md": {
+      "hash": "706da8ca335d81aadf34f290799eacb7",
+      "last_processed": "2025-05-02T09:40:52.750898",
+      "size_bytes": 5672
+    },
+    "C:\\Users\\OEM\\Desktop\\WORK\\progetti\\crocerossa_qdrant_cloud\\parsed\\Testo-Unico-CRI.md": {
+      "hash": "e9d019662d5775165a57b3963e802149",
+      "last_processed": "2025-05-02T09:40:52.750898",
+      "size_bytes": 259867
     }
   },
-  "last_updated": "2025-04-26T10:38:14.023650"
+  "last_updated": "2025-05-02T09:41:55.561629"
 }

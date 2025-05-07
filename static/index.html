@@ -1400,9 +1400,17 @@
       // Formatta le fonti se presenti
       let sourcesHTML = '';
       if (sources && sources.length > 0) {
-        sourcesHTML = '<div class="mt-3 text-xs text-gray-600"><hr class="my-2"><strong>Fonti:</strong><ul class="list-disc ml-4 mt-1">';
+        // Raggruppa le fonti per nome del file
+        const uniqueSources = {};
         for (const source of sources) {
-          sourcesHTML += `<li>${source.file_name || 'Documento sconosciuto'}</li>`;
+          const fileName = source.file_name || 'Documento sconosciuto';
+          uniqueSources[fileName] = true;
+        }
+        
+        // Genera l'HTML con le fonti uniche
+        sourcesHTML = '<div class="mt-3 text-xs text-gray-600"><hr class="my-2"><strong>Fonti:</strong><ul class="list-disc ml-4 mt-1">';
+        for (const fileName of Object.keys(uniqueSources)) {
+          sourcesHTML += `<li>${fileName}</li>`;
         }
         sourcesHTML += '</ul></div>';
       }
