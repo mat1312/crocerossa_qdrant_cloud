@@ -103,3 +103,10 @@ Thumbs.db
 /old_output
 /parsed
 /todo_parsing
+
+# Document folders (PDF, DOCX, XLSX source files)
+/cri_docs
+/new_cri_docs
+/full_parsed
+/full_parsed_txt
+/data
