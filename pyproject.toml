@@ -1,0 +1,50 @@
+[project]
+name = "crocerossa-qdrant-cloud"
+version = "1.0.0"
+description = "RAG system for Italian Red Cross (Croce Rossa Italiana) documentation with Qdrant Cloud"
+requires-python = ">=3.11"
+dependencies = [
+    # Core
+    "python-dotenv==1.2.2",
+    "langchain==1.2.11",
+    "langchain-core==1.2.18",
+    "langchain-text-splitters==1.1.1",
+    "langchain-community==0.4.1",
+    "langchain-openai==1.1.10",
+    "langchain-qdrant==1.1.0",
+    "langchain-cohere==0.5.0",
+
+    # Vector DB
+    "qdrant-client==1.17.0",
+    "fastembed==0.7.4",
+
+    # Document parsing
+    "llama-cloud==1.6.0",
+    "unstructured[md]==0.21.5",
+    "markdown==3.10.2",
+    "nltk==3.9.3",
+    "pypdf==6.7.5",
+
+    # Embeddings
+    "sentence-transformers==5.2.3",
+
+    # Data processing
+    "pandas==3.0.1",
+    "openpyxl==3.1.5",
+
+    # Dashboard
+    "streamlit==1.55.0",
+    "plotly==6.5.2",
+
+    # RAG Evaluation
+    "ragas==0.4.3",
+]
+
+[dependency-groups]
+dev = [
+    "ruff==0.15.5",
+    "pytest==8.3.5",
+]
+
+[tool.uv]
+default-groups = ["dev"]

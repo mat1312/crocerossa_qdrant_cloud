@@ -1,0 +1,52 @@
+# Ruff configuration for crocerossa_qdrant_cloud
+target-version = "py311"
+line-length = 120
+
+[lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "S",      # flake8-bandit (security)
+    "A",      # flake8-builtins
+    "C4",     # flake8-comprehensions
+    "DTZ",    # flake8-datetimez
+    "T20",    # flake8-print
+    "SIM",    # flake8-simplify
+    "TCH",    # flake8-type-checking
+    "PTH",    # flake8-use-pathlib
+    "RUF",    # ruff-specific rules
+]
+ignore = [
+    "S101",   # assert used (ok in scripts)
+    "T201",   # print found (we use print in CLI scripts)
+    "E501",   # line too long (handled by formatter)
+    "B008",   # function call in default arg (common in argparse)
+    "S603",   # subprocess call (we don't use it dangerously)
+    "S607",   # partial executable path
+    "UP007",  # Use X | Y for union types (keep Optional for py3.9 compat)
+    "E701",   # multiple statements on one line (common in compact scripts)
+    "S324",   # hashlib insecure hash (MD5 used for IDs, not security)
+    "E722",   # bare except (legacy code, will clean up gradually)
+    "DTZ005", # datetime without tz (legacy, not critical)
+    "B905",   # zip without strict (legacy code)
+    "RUF001", # ambiguous unicode (Italian text with accents)
+    "PTH123", # open() instead of Path.open() (legacy)
+    "PTH122", # os.path instead of pathlib (legacy)
+]
+
+[lint.per-file-ignores]
+"src/evaluation/*" = ["S101"]  # allow assert in tests/eval
+"src/dashboard/*" = ["T201"]   # allow print in dashboard
+
+[lint.isort]
+known-first-party = ["src"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true

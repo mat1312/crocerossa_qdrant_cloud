@@ -100,13 +100,22 @@ Thumbs.db
 .env
 .env.*
 
+# uv
+uv.lock
+
+# Ruff
+.ruff_cache/
+
+# Document folders & output
 /old_output
 /parsed
 /todo_parsing
-
-# Document folders (PDF, DOCX, XLSX source files)
 /cri_docs
 /new_cri_docs
 /full_parsed
 /full_parsed_txt
 /data
+/docs_onlyvolontario
+
+# Windows junk
+nul

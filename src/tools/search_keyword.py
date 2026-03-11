@@ -8,9 +8,10 @@ Usage:
     python search_keyword.py paliano --method scroll
 """
 
+import argparse
 import os
 import sys
-import argparse
+
 from dotenv import load_dotenv
 from qdrant_client import QdrantClient
 from qdrant_client.models import SparseVector
@@ -27,21 +28,15 @@ def search_with_sparse(client: QdrantClient, collection: str, keyword: str, limi
 
     # Genera sparse embedding per la query
     from fastembed import SparseTextEmbedding
-    sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25")
-    sparse_result = list(sparse_model.embed([keyword]))[0]
 
-    query_sparse = SparseVector(
-        indices=sparse_result.indices.tolist(),
-        values=sparse_result.values.tolist()
-    )
+    sparse_model = SparseTextEmbedding(model_name="Qdrant/bm25")
+    sparse_result = next(iter(sparse_model.embed([keyword])))
+
+    query_sparse = SparseVector(indices=sparse_result.indices.tolist(), values=sparse_result.values.tolist())
 
     # Esegui query
     results = client.query_points(
-        collection_name=collection,
-        query=query_sparse,
-        using="sparse",
-        limit=limit,
-        with_payload=True
+        collection_name=collection, query=query_sparse, using="sparse", limit=limit, with_payload=True
     )
 
     return results.points
@@ -63,11 +58,7 @@ def search_with_scroll(client: QdrantClient, collection: str, keyword: str, limi
 
     while True:
         results, next_offset = client.scroll(
-            collection_name=collection,
-            limit=batch_size,
-            offset=offset,
-            with_payload=True,
-            with_vectors=False
+            collection_name=collection, limit=batch_size, offset=offset, with_payload=True, with_vectors=False
         )
 
         scanned += len(results)
@@ -110,13 +101,15 @@ def print_results(results, keyword: str, method: str):
         if filename not in docs:
             docs[filename] = []
 
-        docs[filename].append({
-            "id": point.id,
-            "score": getattr(point, "score", None),
-            "page": metadata.get("page_number", "?"),
-            "chunk_id": metadata.get("chunk_id", "?"),
-            "content_preview": payload.get("page_content", "")[:200]
-        })
+        docs[filename].append(
+            {
+                "id": point.id,
+                "score": getattr(point, "score", None),
+                "page": metadata.get("page_number", "?"),
+                "chunk_id": metadata.get("chunk_id", "?"),
+                "content_preview": payload.get("page_content", "")[:200],
+            }
+        )
 
     print(f"\n[DOCUMENTI] Trovati: {len(docs)}")
     print("-" * 60)
@@ -126,11 +119,11 @@ def print_results(results, keyword: str, method: str):
         print("-" * 40)
 
         for chunk in chunks[:5]:  # Max 5 chunk per documento
-            score_str = f" | Score: {chunk['score']:.4f}" if chunk['score'] else ""
+            score_str = f" | Score: {chunk['score']:.4f}" if chunk["score"] else ""
             print(f"  * Chunk {chunk['chunk_id']} | Pag. {chunk['page']}{score_str}")
 
             # Evidenzia la keyword nel contenuto
-            preview = chunk['content_preview'].replace('\n', ' ')
+            preview = chunk["content_preview"].replace("\n", " ")
             keyword_lower = keyword.lower()
             preview_lower = preview.lower()
 
@@ -143,9 +136,9 @@ def print_results(results, keyword: str, method: str):
                     snippet = "..." + snippet
                 if end < len(preview):
                     snippet = snippet + "..."
-                print(f"     \"{snippet}\"")
+                print(f'     "{snippet}"')
             else:
-                print(f"     \"{preview[:100]}...\"")
+                print(f'     "{preview[:100]}..."')
 
         if len(chunks) > 5:
             print(f"  ... e altri {len(chunks) - 5} chunk")
@@ -155,8 +148,12 @@ def main():
     parser = argparse.ArgumentParser(description="Cerca keyword in Qdrant")
     parser.add_argument("keyword", help="Parola da cercare")
     parser.add_argument("--limit", type=int, default=50, help="Numero max risultati")
-    parser.add_argument("--method", choices=["sparse", "scroll", "both"], default="both",
-                        help="Metodo: sparse (BM25), scroll (match esatto), both (default)")
+    parser.add_argument(
+        "--method",
+        choices=["sparse", "scroll", "both"],
+        default="both",
+        help="Metodo: sparse (BM25), scroll (match esatto), both (default)",
+    )
     parser.add_argument("--collection", default=None, help="Nome collection (default da .env)")
 
     args = parser.parse_args()
@@ -170,7 +167,7 @@ def main():
         print("[ERRORE] Configura QDRANT_URL, QDRANT_API_KEY, QDRANT_COLLECTION in .env")
         sys.exit(1)
 
-    print(f"[CONN] Connessione a Qdrant...")
+    print("[CONN] Connessione a Qdrant...")
     print(f"   Collection: {collection}")
 
     client = QdrantClient(url=qdrant_url, api_key=qdrant_api_key, timeout=120)

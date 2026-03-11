@@ -11,32 +11,19 @@ Usage:
     streamlit run qdrant_dashboard.py
 """
 
-import os
-import sys
 import time
-import hashlib
 from pathlib import Path
-from typing import List, Dict, Any, Optional
-from datetime import datetime
-from io import BytesIO
+from typing import Any
 
-import streamlit as st
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
+import streamlit as st
 from dotenv import load_dotenv
-
-from qdrant_client import QdrantClient, models
 from langchain_openai import OpenAIEmbeddings
+from qdrant_client import QdrantClient, models
 
 # Import dalla pipeline esistente
-from smart_ingest import (
-    Config,
-    SmartIngestPipeline,
-    QdrantManager,
-    DocumentParser,
-    DocumentChunker
-)
+from smart_ingest import Config, SmartIngestPipeline
 
 # ============================================================================
 # CONFIGURAZIONE
@@ -46,14 +33,12 @@ load_dotenv()
 
 # Configurazione pagina
 st.set_page_config(
-    page_title="Qdrant Dashboard - Croce Rossa",
-    page_icon="🔍",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="Qdrant Dashboard - Croce Rossa", page_icon="🔍", layout="wide", initial_sidebar_state="expanded"
 )
 
 # CSS Custom per rendere più bella la dashboard
-st.markdown("""
+st.markdown(
+    """
 <style>
     .main-header {
         font-size: 2.5rem;
@@ -96,41 +81,42 @@ st.markdown("""
         font-weight: bold;
     }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # ============================================================================
 # SESSIONE E CACHE
 # ============================================================================
+
 
 @st.cache_resource
 def init_config():
     """Inizializza configurazione."""
     return Config()
 
+
 @st.cache_resource
 def init_qdrant_client(_config):
     """Inizializza client Qdrant (cache per sessione)."""
-    return QdrantClient(
-        url=_config.qdrant_url,
-        api_key=_config.qdrant_api_key,
-        timeout=120.0
-    )
+    return QdrantClient(url=_config.qdrant_url, api_key=_config.qdrant_api_key, timeout=120.0)
+
 
 @st.cache_resource
 def init_embeddings(_config):
     """Inizializza embeddings OpenAI."""
-    return OpenAIEmbeddings(
-        model=_config.embedding_model,
-        openai_api_key=_config.openai_api_key
-    )
+    return OpenAIEmbeddings(model=_config.embedding_model, openai_api_key=_config.openai_api_key)
+
 
 def clear_cache():
     """Pulisce cache dopo modifiche."""
     st.cache_data.clear()
 
+
 # ============================================================================
 # FUNZIONI UTILITY
 # ============================================================================
+
 
 def get_all_documents(client: QdrantClient, collection_name: str) -> pd.DataFrame:
     """Recupera lista di tutti i documenti con statistiche."""
@@ -140,7 +126,7 @@ def get_all_documents(client: QdrantClient, collection_name: str) -> pd.DataFram
             collection_name=collection_name,
             limit=10000,  # Limita a 10k punti
             with_payload=True,
-            with_vectors=False
+            with_vectors=False,
         )
 
         if not points:
@@ -167,7 +153,7 @@ def get_all_documents(client: QdrantClient, collection_name: str) -> pd.DataFram
                     "processed_date": metadata.get("processed_date", "N/A"),
                     "file_hash": metadata.get("file_hash", "N/A"),
                     "chunks": 0,
-                    "total_chars": 0
+                    "total_chars": 0,
                 }
 
             docs_map[filename]["chunks"] += 1
@@ -189,22 +175,14 @@ def get_all_documents(client: QdrantClient, collection_name: str) -> pd.DataFram
         return df
 
     except Exception as e:
-        st.error(f"Errore recupero documenti: {str(e)}")
+        st.error(f"Errore recupero documenti: {e!s}")
         return pd.DataFrame()
 
-def search_document_by_name(
-    client: QdrantClient,
-    collection_name: str,
-    query: str
-) -> List[Dict[str, Any]]:
+
+def search_document_by_name(client: QdrantClient, collection_name: str, query: str) -> list[dict[str, Any]]:
     """Cerca documenti per nome (match parziale)."""
     try:
-        points, _ = client.scroll(
-            collection_name=collection_name,
-            limit=10000,
-            with_payload=True,
-            with_vectors=False
-        )
+        points, _ = client.scroll(collection_name=collection_name, limit=10000, with_payload=True, with_vectors=False)
 
         results = []
         query_lower = query.lower()
@@ -218,26 +196,25 @@ def search_document_by_name(
 
             # Match parziale sul nome
             if query_lower in filename.lower() and filename not in seen_files:
-                results.append({
-                    "filename": filename,
-                    "document_type": metadata.get("document_type", "Unknown"),
-                    "processed_date": metadata.get("processed_date", "N/A"),
-                })
+                results.append(
+                    {
+                        "filename": filename,
+                        "document_type": metadata.get("document_type", "Unknown"),
+                        "processed_date": metadata.get("processed_date", "N/A"),
+                    }
+                )
                 seen_files.add(filename)
 
         return results
 
     except Exception as e:
-        st.error(f"Errore ricerca: {str(e)}")
+        st.error(f"Errore ricerca: {e!s}")
         return []
 
+
 def semantic_search(
-    client: QdrantClient,
-    embeddings: OpenAIEmbeddings,
-    collection_name: str,
-    query: str,
-    top_k: int = 10
-) -> List[Dict[str, Any]]:
+    client: QdrantClient, embeddings: OpenAIEmbeddings, collection_name: str, query: str, top_k: int = 10
+) -> list[dict[str, Any]]:
     """Ricerca semantica nel contenuto."""
     try:
         # Genera embedding della query
@@ -245,10 +222,7 @@ def semantic_search(
 
         # Cerca in Qdrant
         results = client.search(
-            collection_name=collection_name,
-            query_vector=query_vector,
-            limit=top_k,
-            with_payload=True
+            collection_name=collection_name, query_vector=query_vector, limit=top_k, with_payload=True
         )
 
         formatted_results = []
@@ -256,26 +230,25 @@ def semantic_search(
             payload = hit.payload
             metadata = payload.get("metadata", payload)
 
-            formatted_results.append({
-                "score": hit.score,
-                "filename": metadata.get("filename", "Unknown"),
-                "chunk_id": metadata.get("chunk_id", "N/A"),
-                "chunk_title": metadata.get("chunk_title", "N/A"),
-                "content": payload.get("page_content", "")[:500] + "...",
-                "document_type": metadata.get("document_type", "Unknown")
-            })
+            formatted_results.append(
+                {
+                    "score": hit.score,
+                    "filename": metadata.get("filename", "Unknown"),
+                    "chunk_id": metadata.get("chunk_id", "N/A"),
+                    "chunk_title": metadata.get("chunk_title", "N/A"),
+                    "content": payload.get("page_content", "")[:500] + "...",
+                    "document_type": metadata.get("document_type", "Unknown"),
+                }
+            )
 
         return formatted_results
 
     except Exception as e:
-        st.error(f"Errore semantic search: {str(e)}")
+        st.error(f"Errore semantic search: {e!s}")
         return []
 
-def get_document_chunks(
-    client: QdrantClient,
-    collection_name: str,
-    filename: str
-) -> List[Dict[str, Any]]:
+
+def get_document_chunks(client: QdrantClient, collection_name: str, filename: str) -> list[dict[str, Any]]:
     """Recupera tutti i chunks di un documento specifico."""
     try:
         # Genera varianti del filename
@@ -286,25 +259,15 @@ def get_document_chunks(
         # Costruisci filtro OR
         conditions = []
         for variant in set(variants):
-            conditions.append(
-                models.FieldCondition(
-                    key="metadata.filename",
-                    match=models.MatchValue(value=variant)
-                )
-            )
-            conditions.append(
-                models.FieldCondition(
-                    key="filename",
-                    match=models.MatchValue(value=variant)
-                )
-            )
+            conditions.append(models.FieldCondition(key="metadata.filename", match=models.MatchValue(value=variant)))
+            conditions.append(models.FieldCondition(key="filename", match=models.MatchValue(value=variant)))
 
         points, _ = client.scroll(
             collection_name=collection_name,
             scroll_filter=models.Filter(should=conditions),
             limit=1000,
             with_payload=True,
-            with_vectors=False
+            with_vectors=False,
         )
 
         chunks = []
@@ -312,12 +275,14 @@ def get_document_chunks(
             payload = point.payload
             metadata = payload.get("metadata", payload)
 
-            chunks.append({
-                "chunk_id": metadata.get("chunk_id", "N/A"),
-                "chunk_title": metadata.get("chunk_title", "N/A"),
-                "content": payload.get("page_content", ""),
-                "chars": len(payload.get("page_content", ""))
-            })
+            chunks.append(
+                {
+                    "chunk_id": metadata.get("chunk_id", "N/A"),
+                    "chunk_title": metadata.get("chunk_title", "N/A"),
+                    "content": payload.get("page_content", ""),
+                    "chars": len(payload.get("page_content", "")),
+                }
+            )
 
         # Ordina per chunk_id
         chunks.sort(key=lambda x: x.get("chunk_id", 0))
@@ -325,14 +290,11 @@ def get_document_chunks(
         return chunks
 
     except Exception as e:
-        st.error(f"Errore recupero chunks: {str(e)}")
+        st.error(f"Errore recupero chunks: {e!s}")
         return []
 
-def delete_document(
-    client: QdrantClient,
-    collection_name: str,
-    filename: str
-) -> int:
+
+def delete_document(client: QdrantClient, collection_name: str, filename: str) -> int:
     """Elimina tutti i chunks di un documento."""
     try:
         # Genera varianti
@@ -343,42 +305,29 @@ def delete_document(
         # Costruisci filtro
         conditions = []
         for variant in set(variants):
-            conditions.append(
-                models.FieldCondition(
-                    key="metadata.filename",
-                    match=models.MatchValue(value=variant)
-                )
-            )
-            conditions.append(
-                models.FieldCondition(
-                    key="filename",
-                    match=models.MatchValue(value=variant)
-                )
-            )
+            conditions.append(models.FieldCondition(key="metadata.filename", match=models.MatchValue(value=variant)))
+            conditions.append(models.FieldCondition(key="filename", match=models.MatchValue(value=variant)))
 
         # Conta prima
-        count = client.count(
-            collection_name=collection_name,
-            count_filter=models.Filter(should=conditions)
-        ).count
+        count = client.count(collection_name=collection_name, count_filter=models.Filter(should=conditions)).count
 
         # Elimina
         client.delete(
             collection_name=collection_name,
-            points_selector=models.FilterSelector(
-                filter=models.Filter(should=conditions)
-            )
+            points_selector=models.FilterSelector(filter=models.Filter(should=conditions)),
         )
 
         return count
 
     except Exception as e:
-        st.error(f"Errore eliminazione: {str(e)}")
+        st.error(f"Errore eliminazione: {e!s}")
         return 0
+
 
 # ============================================================================
 # PAGINE DASHBOARD
 # ============================================================================
+
 
 def page_overview(config: Config, client: QdrantClient):
     """Pagina Overview con statistiche principali."""
@@ -393,38 +342,22 @@ def page_overview(config: Config, client: QdrantClient):
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
-            st.metric(
-                label="📄 Documenti Totali",
-                value=len(docs_df),
-                delta=None
-            )
+            st.metric(label="📄 Documenti Totali", value=len(docs_df), delta=None)
 
         with col2:
-            st.metric(
-                label="🧩 Chunks Totali",
-                value=f"{collection_info.points_count:,}",
-                delta=None
-            )
+            st.metric(label="🧩 Chunks Totali", value=f"{collection_info.points_count:,}", delta=None)
 
         with col3:
             if not docs_df.empty:
                 avg_chunks = docs_df["chunks"].mean()
-                st.metric(
-                    label="📈 Media Chunks/Doc",
-                    value=f"{avg_chunks:.1f}",
-                    delta=None
-                )
+                st.metric(label="📈 Media Chunks/Doc", value=f"{avg_chunks:.1f}", delta=None)
             else:
                 st.metric(label="📈 Media Chunks/Doc", value="0")
 
         with col4:
             if not docs_df.empty:
                 total_chars = docs_df["total_chars"].sum()
-                st.metric(
-                    label="💾 Caratteri Totali",
-                    value=f"{total_chars:,}",
-                    delta=None
-                )
+                st.metric(label="💾 Caratteri Totali", value=f"{total_chars:,}", delta=None)
             else:
                 st.metric(label="💾 Caratteri Totali", value="0")
 
@@ -442,7 +375,7 @@ def page_overview(config: Config, client: QdrantClient):
                     y="chunks",
                     color="document_type",
                     title="Top 15 Documenti per Numero Chunks",
-                    labels={"filename": "Documento", "chunks": "Chunks"}
+                    labels={"filename": "Documento", "chunks": "Chunks"},
                 )
                 fig.update_layout(xaxis_tickangle=-45)
                 st.plotly_chart(fig, use_container_width=True)
@@ -451,10 +384,7 @@ def page_overview(config: Config, client: QdrantClient):
                 st.subheader("📁 Distribuzione per Tipo")
                 type_counts = docs_df["document_type"].value_counts()
                 fig = px.pie(
-                    values=type_counts.values,
-                    names=type_counts.index,
-                    title="Documenti per Tipologia",
-                    hole=0.4
+                    values=type_counts.values, names=type_counts.index, title="Documenti per Tipologia", hole=0.4
                 )
                 st.plotly_chart(fig, use_container_width=True)
 
@@ -472,7 +402,7 @@ def page_overview(config: Config, client: QdrantClient):
                         y="count",
                         markers=True,
                         title="Documenti Processati nel Tempo",
-                        labels={"date_only": "Data", "count": "Numero Documenti"}
+                        labels={"date_only": "Data", "count": "Numero Documenti"},
                     )
                     st.plotly_chart(fig, use_container_width=True)
 
@@ -489,7 +419,8 @@ def page_overview(config: Config, client: QdrantClient):
             st.write(f"**Vectors:** {collection_info.vectors_count:,}")
 
     except Exception as e:
-        st.error(f"Errore caricamento statistiche: {str(e)}")
+        st.error(f"Errore caricamento statistiche: {e!s}")
+
 
 def page_documents(config: Config, client: QdrantClient):
     """Pagina Document Explorer."""
@@ -519,7 +450,7 @@ def page_documents(config: Config, client: QdrantClient):
         st.subheader("🎛️ Filtri")
 
         # Filtro per tipo
-        doc_types = ["Tutti"] + list(docs_df["document_type"].unique())
+        doc_types = ["Tutti", *list(docs_df["document_type"].unique())]
         selected_type = st.selectbox("Tipo Documento", doc_types)
 
         if selected_type != "Tutti":
@@ -531,16 +462,10 @@ def page_documents(config: Config, client: QdrantClient):
             max_chunks = int(docs_df["chunks"].max())
 
             chunks_range = st.slider(
-                "Numero Chunks",
-                min_value=min_chunks,
-                max_value=max_chunks,
-                value=(min_chunks, max_chunks)
+                "Numero Chunks", min_value=min_chunks, max_value=max_chunks, value=(min_chunks, max_chunks)
             )
 
-            docs_df = docs_df[
-                (docs_df["chunks"] >= chunks_range[0]) &
-                (docs_df["chunks"] <= chunks_range[1])
-            ]
+            docs_df = docs_df[(docs_df["chunks"] >= chunks_range[0]) & (docs_df["chunks"] <= chunks_range[1])]
 
     # Mostra risultati
     st.subheader(f"📄 {len(docs_df)} Documenti Trovati")
@@ -554,19 +479,15 @@ def page_documents(config: Config, client: QdrantClient):
             "filename": "Nome File",
             "document_type": "Tipo",
             "chunks": st.column_config.NumberColumn("Chunks", format="%d"),
-            "processed_date": st.column_config.DatetimeColumn("Data Processamento")
-        }
+            "processed_date": st.column_config.DatetimeColumn("Data Processamento"),
+        },
     )
 
     # Dettagli documento selezionato
     st.divider()
     st.subheader("🔍 Dettagli Documento")
 
-    selected_doc = st.selectbox(
-        "Seleziona documento da ispezionare",
-        options=docs_df["filename"].tolist(),
-        index=0
-    )
+    selected_doc = st.selectbox("Seleziona documento da ispezionare", options=docs_df["filename"].tolist(), index=0)
 
     if selected_doc:
         # Bottoni azione
@@ -579,7 +500,7 @@ def page_documents(config: Config, client: QdrantClient):
         # Conferma eliminazione
         if st.session_state.get("confirm_delete") == selected_doc:
             st.warning(f"⚠️ Sei sicuro di voler eliminare '{selected_doc}'?")
-            col1, col2, col3 = st.columns([1, 1, 3])
+            col1, col2, _col3 = st.columns([1, 1, 3])
 
             with col1:
                 if st.button("✅ Sì, elimina", type="primary"):
@@ -605,6 +526,7 @@ def page_documents(config: Config, client: QdrantClient):
                 with st.expander(f"Chunk {chunk['chunk_id']}: {chunk['chunk_title']} ({chunk['chars']} chars)"):
                     st.text(chunk["content"])
 
+
 def page_semantic_search(config: Config, client: QdrantClient, embeddings: OpenAIEmbeddings):
     """Pagina Semantic Search."""
     st.markdown('<div class="main-header">🔎 Semantic Search</div>', unsafe_allow_html=True)
@@ -613,12 +535,10 @@ def page_semantic_search(config: Config, client: QdrantClient, embeddings: OpenA
 
     # Input query
     query = st.text_area(
-        "🔍 Inserisci la tua query",
-        placeholder="es: Come gestire un'emergenza sanitaria?",
-        height=100
+        "🔍 Inserisci la tua query", placeholder="es: Come gestire un'emergenza sanitaria?", height=100
     )
 
-    col1, col2 = st.columns([3, 1])
+    _col1, col2 = st.columns([3, 1])
 
     with col2:
         top_k = st.number_input("Top K risultati", min_value=1, max_value=50, value=10)
@@ -647,6 +567,7 @@ def page_semantic_search(config: Config, client: QdrantClient, embeddings: OpenA
         else:
             st.warning("Nessun risultato trovato.")
 
+
 def page_upload(config: Config):
     """Pagina Upload & Ingest."""
     st.markdown('<div class="main-header">📤 Upload & Ingest</div>', unsafe_allow_html=True)
@@ -655,9 +576,7 @@ def page_upload(config: Config):
 
     # Upload file
     uploaded_files = st.file_uploader(
-        "Scegli file da caricare",
-        type=["pdf", "xlsx", "xls", "doc", "docx", "pptx"],
-        accept_multiple_files=True
+        "Scegli file da caricare", type=["pdf", "xlsx", "xls", "doc", "docx", "pptx"], accept_multiple_files=True
     )
 
     if uploaded_files:
@@ -673,7 +592,7 @@ def page_upload(config: Config):
             mode = st.radio(
                 "Modalità",
                 options=["replace", "add-only"],
-                help="replace: sostituisce se esiste | add-only: salta se esiste"
+                help="replace: sostituisce se esiste | add-only: salta se esiste",
             )
 
         with col2:
@@ -747,6 +666,7 @@ def page_upload(config: Config):
 
             clear_cache()
 
+
 def page_delete_manager(config: Config, client: QdrantClient):
     """Pagina Delete Manager."""
     st.markdown('<div class="main-header">🗑️ Delete Manager</div>', unsafe_allow_html=True)
@@ -761,10 +681,7 @@ def page_delete_manager(config: Config, client: QdrantClient):
         return
 
     # Selezione documento
-    selected_doc = st.selectbox(
-        "Seleziona documento da eliminare",
-        options=docs_df["filename"].tolist()
-    )
+    selected_doc = st.selectbox("Seleziona documento da eliminare", options=docs_df["filename"].tolist())
 
     if selected_doc:
         # Info documento
@@ -787,7 +704,9 @@ def page_delete_manager(config: Config, client: QdrantClient):
 
         # Conferma
         if st.session_state.get("delete_confirm") == selected_doc:
-            st.error(f"⚠️ **ATTENZIONE:** Stai per eliminare permanentemente '{selected_doc}' ({doc_info['chunks']} chunks)")
+            st.error(
+                f"⚠️ **ATTENZIONE:** Stai per eliminare permanentemente '{selected_doc}' ({doc_info['chunks']} chunks)"
+            )
 
             col1, col2 = st.columns(2)
 
@@ -807,6 +726,7 @@ def page_delete_manager(config: Config, client: QdrantClient):
                     st.session_state.pop("delete_confirm", None)
                     st.rerun()
 
+
 def page_health_check(config: Config, client: QdrantClient):
     """Pagina Health Check."""
     st.markdown('<div class="main-header">🏥 Health Check</div>', unsafe_allow_html=True)
@@ -823,7 +743,7 @@ def page_health_check(config: Config, client: QdrantClient):
             st.success(f"✅ Connesso - {len(collections.collections)} collezioni disponibili")
             results["qdrant"] = "OK"
         except Exception as e:
-            st.error(f"❌ Errore: {str(e)}")
+            st.error(f"❌ Errore: {e!s}")
             results["qdrant"] = "FAIL"
 
         # Check Collection
@@ -836,21 +756,18 @@ def page_health_check(config: Config, client: QdrantClient):
             st.write(f"- **Vectors:** {info.vectors_count:,}")
             results["collection"] = "OK"
         except Exception as e:
-            st.error(f"❌ Errore: {str(e)}")
+            st.error(f"❌ Errore: {e!s}")
             results["collection"] = "FAIL"
 
         # Check OpenAI
         st.subheader("🤖 OpenAI API")
         try:
-            embeddings = OpenAIEmbeddings(
-                model=config.embedding_model,
-                openai_api_key=config.openai_api_key
-            )
+            embeddings = OpenAIEmbeddings(model=config.embedding_model, openai_api_key=config.openai_api_key)
             test_embedding = embeddings.embed_query("test")
             st.success(f"✅ API attiva - Dimensione embedding: {len(test_embedding)}")
             results["openai"] = "OK"
         except Exception as e:
-            st.error(f"❌ Errore: {str(e)}")
+            st.error(f"❌ Errore: {e!s}")
             results["openai"] = "FAIL"
 
         # Check LlamaParse
@@ -873,9 +790,11 @@ def page_health_check(config: Config, client: QdrantClient):
         else:
             st.error("⚠️ Alcuni sistemi hanno problemi.")
 
+
 # ============================================================================
 # MAIN APP
 # ============================================================================
+
 
 def main():
     """Entry point dashboard."""
@@ -890,7 +809,7 @@ def main():
         client = init_qdrant_client(config)
         embeddings = init_embeddings(config)
     except Exception as e:
-        st.error(f"❌ Errore inizializzazione: {str(e)}")
+        st.error(f"❌ Errore inizializzazione: {e!s}")
         st.stop()
 
     # Menu navigazione
@@ -902,8 +821,8 @@ def main():
             "🔎 Semantic Search",
             "📤 Upload & Ingest",
             "🗑️ Delete Manager",
-            "🏥 Health Check"
-        ]
+            "🏥 Health Check",
+        ],
     )
 
     st.sidebar.markdown("---")
@@ -936,6 +855,7 @@ def main():
         page_delete_manager(config, client)
     elif page == "🏥 Health Check":
         page_health_check(config, client)
+
 
 if __name__ == "__main__":
     main()
