@@ -2,7 +2,7 @@
 name = "crocerossa-qdrant-cloud"
 version = "1.0.0"
 description = "RAG system for Italian Red Cross (Croce Rossa Italiana) documentation with Qdrant Cloud"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.13"
 dependencies = [
     # Core
     "python-dotenv==1.2.2",
@@ -29,7 +29,7 @@ dependencies = [
     "sentence-transformers==5.2.3",
 
     # Data processing
-    "pandas==3.0.1",
+    "pandas>=2.2,<3",
     "openpyxl==3.1.5",
 
     # Dashboard

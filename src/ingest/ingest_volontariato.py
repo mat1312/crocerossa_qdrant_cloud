@@ -30,8 +30,8 @@ from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# Document processing
-from llama_cloud_services import LlamaParse
+# Document processing - LlamaParse imported lazily in _parse_with_llamaparse()
+import pandas as pd
 
 # Qdrant
 from qdrant_client import QdrantClient, models
@@ -115,12 +115,14 @@ class HybridConfig:
 
 
 class DocumentParser:
-    """Parser documenti tramite LlamaParse v2 (tier=cost_effective)."""
+    """Parser documenti: Pandas per Excel, LlamaParse v2 per il resto."""
 
     def __init__(self, config: HybridConfig):
         self.config = config
 
-    def parse_file(self, filepath: str) -> str:
+    def parse_file(self, filepath: str) -> str | list[str]:
+        """Parsa un file. Per Excel restituisce list[str] (un testo per riga).
+        Per altri formati restituisce str (markdown da LlamaParse)."""
         filepath = Path(filepath)
 
         if not filepath.exists():
@@ -129,6 +131,143 @@ class DocumentParser:
         ext = filepath.suffix.lower()
         if ext not in self.config.supported_extensions:
             raise ValueError(f"Estensione non supportata: {ext}")
+
+        if ext in (".xlsx", ".xls"):
+            return self._parse_excel_pandas(filepath)
+        return self._parse_with_llamaparse(filepath)
+
+    def _parse_excel_pandas(self, filepath: Path) -> list[str]:
+        """Parsa Excel con Pandas: ogni riga diventa un testo in linguaggio naturale."""
+        logger.info(f"📊 Parsing Excel (Pandas): {filepath.name}")
+        start_time = time.time()
+
+        df = pd.read_excel(filepath, sheet_name=0, dtype=str)
+        df = df.fillna("")
+
+        # Pulizia colonne vuote
+        df = df.loc[:, df.columns.notna()]
+        df = df.loc[:, (df != "").any(axis=0)]
+
+        # Rileva tipo di file dai nomi colonne
+        col_lower = [str(c).lower() for c in df.columns]
+        col_str = " ".join(col_lower)
+
+        if "comitato territoriale" in col_str or "zona sismica" in col_str:
+            rows = self._format_competenze_territoriali(df)
+        elif "delegato" in col_str or "presidente" in col_str:
+            rows = self._format_delegati_territoriali(df)
+        else:
+            rows = self._format_generic(df)
+
+        # Filtra righe vuote
+        rows = [r for r in rows if len(r.strip()) > 20]
+
+        elapsed = time.time() - start_time
+        logger.info(f"✅ Excel parsed: {filepath.name} → {len(rows)} righe ({elapsed:.2f}s)")
+        return rows
+
+    def _format_competenze_territoriali(self, df: pd.DataFrame) -> list[str]:
+        """Formatta file Competenze Territoriali: 1 riga = 1 comune."""
+        rows = []
+        for _, row in df.iterrows():
+            citta = str(row.iloc[0]).strip()
+            provincia = str(row.iloc[1]).strip()
+            comitato = str(row.iloc[2]).strip()
+            zona_meteo = str(row.iloc[3]).strip()
+            zona_sismica = str(row.iloc[4]).strip()
+            zona_aib = str(row.iloc[6]).strip() if len(row) > 6 else ""
+            toponomastica = str(row.iloc[7]).strip() if len(row) > 7 else ""
+
+            if not citta or not comitato:
+                continue
+
+            parts = [
+                f"Il comune di {citta} (provincia di {provincia}) "
+                f"è sotto la competenza territoriale del Comitato CRI di {comitato}.",
+            ]
+            if zona_meteo:
+                parts.append(f"Zona di allerta meteo: {zona_meteo}.")
+            if zona_sismica:
+                parts.append(f"Zona sismica: {zona_sismica}.")
+            if zona_aib:
+                parts.append(f"Zona AIB (antincendio boschivo): {zona_aib}.")
+            if toponomastica:
+                parts.append(f"Riferimento normativo: {toponomastica}.")
+
+            rows.append(" ".join(parts))
+        return rows
+
+    def _format_delegati_territoriali(self, df: pd.DataFrame) -> list[str]:
+        """Formatta file Delegati Territoriali: 1 riga = 1 comitato con tutti i delegati."""
+        rows = []
+
+        # Le colonne hanno merged headers, mappiamo manualmente
+        # Col 0: Comitati, 1: Presidente, 2: cellulare, 3: Atto
+        # Poi gruppi di 3: (Nome, mail, telefono) per ogni delegato
+        delegati_nomi = [
+            "Delegato Salute",
+            "Delegato Inclusione Sociale e Migrazioni",
+            "Delegato Operazioni, Emergenza e Soccorsi",
+            "Delegato Principi e Valori",
+            "Delegato Cooperazione Internazionale",
+            "Delegato Organizzazione, Innovazione, Sviluppo e Volontariato",
+            "Referente Formazione",
+        ]
+
+        for _, row in df.iterrows():
+            vals = [str(v).strip() if str(v).strip() != "nan" else "" for v in row.values]
+
+            comitato = vals[0] if len(vals) > 0 else ""
+            presidente = vals[1] if len(vals) > 1 else ""
+            cellulare = vals[2] if len(vals) > 2 else ""
+
+            if not comitato:
+                continue
+
+            # Pulisci numeri telefono (rimuovi formule Excel tipo =+39...)
+            cellulare = cellulare.replace("=+", "+").replace("=", "")
+
+            parts = [f"Il Comitato CRI di {comitato} ha come presidente {presidente}."]
+            if cellulare:
+                parts.append(f"Telefono presidente: {cellulare}.")
+
+            # Delegati: partono dalla colonna 4, gruppi di 3 (nome, mail, tel)
+            col_start = 4
+            for i, deleg_nome in enumerate(delegati_nomi):
+                base = col_start + (i * 3)
+                nome = vals[base] if len(vals) > base else ""
+                mail = vals[base + 1] if len(vals) > base + 1 else ""
+                tel = vals[base + 2] if len(vals) > base + 2 else ""
+
+                if nome:
+                    tel = tel.replace("=+", "+").replace("=", "")
+                    deleg_parts = [f"{deleg_nome}: {nome}"]
+                    if mail:
+                        deleg_parts.append(f"email {mail}")
+                    if tel:
+                        deleg_parts.append(f"tel {tel}")
+                    parts.append(", ".join(deleg_parts) + ".")
+
+            rows.append(" ".join(parts))
+        return rows
+
+    def _format_generic(self, df: pd.DataFrame) -> list[str]:
+        """Fallback generico: ogni riga come elenco colonna: valore."""
+        rows = []
+        columns = list(df.columns)
+        for _, row in df.iterrows():
+            parts = []
+            for col in columns:
+                val = str(row[col]).strip()
+                if val and val != "nan":
+                    parts.append(f"{col}: {val}")
+            if parts:
+                rows.append(". ".join(parts) + ".")
+        return rows
+
+    def _parse_with_llamaparse(self, filepath: Path) -> str:
+        """Parsa con LlamaParse v2 (cost_effective) per PDF/DOCX/PPTX."""
+        from llama_cloud_services import LlamaParse
 
         logger.info(f"📄 Parsing LlamaParse v2 (tier={self.config.llama_tier}): {filepath.name}")
 
@@ -639,14 +778,61 @@ class HybridIngestPipeline:
             return result
 
         try:
-            content = self.parser.parse_file(str(filepath))
-            if not content.strip():
-                result["status"] = "error"
-                result["error"] = "Contenuto vuoto"
-                return result
-
+            parsed = self.parser.parse_file(str(filepath))
             file_hash = self.get_file_hash(str(filepath))
-            chunks = self.chunker.chunk_document(content, filename, str(filepath.absolute()), file_hash)
+
+            if isinstance(parsed, list):
+                # Excel: ogni elemento è già un chunk pronto (1 riga = 1 chunk)
+                if not parsed:
+                    result["status"] = "error"
+                    result["error"] = "Contenuto vuoto"
+                    return result
+
+                doc_type = "Excel"
+                year = MetadataExtractor.extract_year(filename)
+                category = MetadataExtractor.infer_category(filename)
+                processed_date = datetime.now().isoformat()
+
+                chunks = []
+                for i, text in enumerate(parsed):
+                    doc = Document(
+                        page_content=text,
+                        metadata={
+                            "filename": filename,
+                            "source": str(filepath.absolute()),
+                            "document_type": doc_type,
+                            "file_hash": file_hash,
+                            "page_number": 1,
+                            "year": year,
+                            "category": category,
+                            "processed_date": processed_date,
+                            "ingest_version": "volontariato-1.0-pandas",
+                            "chunk_id": i + 1,
+                            "total_chunks": len(parsed),
+                            "chunk_title": text[:60] + "...",
+                            "char_count": len(text),
+                            "word_count": len(text.split()),
+                            "position": (
+                                "start" if i < len(parsed) * 0.2
+                                else "end" if i > len(parsed) * 0.8
+                                else "middle"
+                            ),
+                        },
+                    )
+                    chunks.append(doc)
+
+                logger.info(f"📊 Excel → {len(chunks)} chunks (1 riga = 1 chunk)")
+            else:
+                # PDF/DOCX: flusso standard LlamaParse + chunker
+                content = parsed
+                if not content.strip():
+                    result["status"] = "error"
+                    result["error"] = "Contenuto vuoto"
+                    return result
+
+                chunks = self.chunker.chunk_document(
+                    content, filename, str(filepath.absolute()), file_hash
+                )
 
             if not chunks:
                 result["status"] = "error"
